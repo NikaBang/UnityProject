@@ -8,46 +8,52 @@ public class Alarm : MonoBehaviour
 {
     [SerializeField] private AudioSource _alarm;
     [SerializeField] private float _fadeSpeed;
+
     private float _maxVolume = 1f;
+    private float _minVolume = 0f;
     private bool _playerInAlarm = false;
 
-    void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (other.CompareTag("Player"))
+        if (collision.TryGetComponent<Player>(out Player player))
         {
             _playerInAlarm = true;
-            StartCoroutine(FadeIn());
+            StartCoroutine(AdjustVolume(_maxVolume));
         }
     }
 
-    void OnTriggerExit2D(Collider2D other)
+    private void OnTriggerExit2D(Collider2D collision)
     {
-        if (other.CompareTag("Player"))
+        if (collision.TryGetComponent<Player>(out Player player))
         {
             _playerInAlarm = false;
-            StartCoroutine(FadeOut());
+            StartCoroutine(AdjustVolume(_minVolume));
         }
     }
 
-    IEnumerator FadeIn()
+    private IEnumerator AdjustVolume(float target)
     {
-        _alarm.Play();
+        float faultVolume = 0.01f;
+        bool cheñkCollision = _playerInAlarm;
 
-        while (_playerInAlarm && _alarm.volume < _maxVolume)
+        if (_playerInAlarm == true) 
         {
-            _alarm.volume += _fadeSpeed * Time.deltaTime;
-            yield return null;
-        }
-    }
-
-    IEnumerator FadeOut()
-    {
-        while (!_playerInAlarm && _alarm.volume > 0)
-        {
-            _alarm.volume -= _fadeSpeed * Time.deltaTime;
-            yield return null;
+            _alarm.Play();
         }
 
-        _alarm.Stop();
+        while (Mathf.Abs(_alarm.volume - target) > faultVolume)
+        {
+            _alarm.volume = Mathf.MoveTowards(_alarm.volume, target, _fadeSpeed * Time.deltaTime);
+
+            if(cheñkCollision != _playerInAlarm)
+                yield break;
+
+            yield return null;
+        }
+
+        if (_alarm.volume < faultVolume) 
+        {
+            _alarm.Stop();
+        }
     }
 }

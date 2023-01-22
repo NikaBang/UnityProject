@@ -5,6 +5,7 @@ using UnityEngine;
 public class Movement : MonoBehaviour
 {
     [SerializeField] private float _speed;
+
     private void Update()
     {
         if (Input.GetKey(KeyCode.D))
