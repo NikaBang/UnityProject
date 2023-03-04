@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Alarm : MonoBehaviour
 {
-    [SerializeField] private TrigerPlayer TrigerPlayer;
+    [SerializeField] private TrigerPlayer _trigerPlayer;
     [SerializeField] private AudioSource _alarm;
     [SerializeField] private float _fadeSpeed;
 
@@ -13,22 +13,22 @@ public class Alarm : MonoBehaviour
 
     private void OnEnable()
     {
-        TrigerPlayer.PlayerCollisionEvent += PlayAlarm;
+        _alarm.volume = _minVolume;
+        _alarm.loop = true;
+
+        _trigerPlayer.PlayerCollidedEvent += PlayAlarm;
     }
 
     private void OnDisable()
     {
-        TrigerPlayer.PlayerCollisionEvent += PlayAlarm;
+        _trigerPlayer.PlayerCollidedEvent += PlayAlarm;
     }
 
     private void PlayAlarm(bool inCollision)
     {
         if (inCollision == true)
         {
-            _alarm.volume = _minVolume;
-            _alarm.loop = true;
             _playerInAlarm = true;
-
             StartCoroutine(AdjustVolume(_maxVolume));
         }
         else
