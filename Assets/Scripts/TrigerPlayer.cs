@@ -5,13 +5,13 @@ using UnityEngine.Events;
 
 public class TrigerPlayer : MonoBehaviour
 {
-    public event UnityAction<bool> PlayerCollidedEvent;
+    public event UnityAction<bool> PlayerCollided;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.TryGetComponent(out Player player))
         {
-            PlayerCollidedEvent?.Invoke(true);
+            PlayerCollided?.Invoke(true);
         }
     }
 
@@ -19,7 +19,7 @@ public class TrigerPlayer : MonoBehaviour
     {
         if (collision.TryGetComponent(out Player player))
         {
-            PlayerCollidedEvent?.Invoke(false);
+            PlayerCollided?.Invoke(false);
         }
     }
 }

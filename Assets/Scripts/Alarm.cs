@@ -6,54 +6,57 @@ public class Alarm : MonoBehaviour
     [SerializeField] private TrigerPlayer _trigerPlayer;
     [SerializeField] private AudioSource _alarm;
     [SerializeField] private float _fadeSpeed;
+    [SerializeField] private AudioSource _audioSource;
+
+    private Coroutine _coroutineVolumeController;
 
     private const float _maxVolume = 1f;
     private const float _minVolume = 0f;
-    private bool _playerInAlarm = false;
+    private bool _loopCycleCoroutineChangeVolume;
 
     private void OnEnable()
     {
-        _alarm.volume = _minVolume;
-        _alarm.loop = true;
+        _audioSource = GetComponent<AudioSource>();
+        _audioSource.volume = _minVolume;
 
-        _trigerPlayer.PlayerCollidedEvent += PlayAlarm;
+        _trigerPlayer.PlayerCollided += Play;
     }
 
     private void OnDisable()
     {
-        _trigerPlayer.PlayerCollidedEvent += PlayAlarm;
+        _trigerPlayer.PlayerCollided += Play;
     }
 
-    private void PlayAlarm(bool inCollision)
+    private void Play(bool inCollision)
     {
         if (inCollision == true)
         {
-            _playerInAlarm = true;
-            StartCoroutine(AdjustVolume(_maxVolume));
+            SwitchAudio(Selector.On);
+            RestartCoroutineChangeVolume(_maxVolume);
         }
         else
         {
-            _playerInAlarm = false;
-            StartCoroutine(AdjustVolume(_minVolume));
+            RestartCoroutineChangeVolume(_minVolume);
         }
+    }
+
+    private void RestartCoroutineChangeVolume(float targetVolume)
+    {
+        if (_coroutineVolumeController != null)
+        {
+            StopCoroutine(_coroutineVolumeController);
+        }
+
+        _coroutineVolumeController = StartCoroutine(AdjustVolume(targetVolume));
     }
 
     private IEnumerator AdjustVolume(float target)
     {
         float faultVolume = 0.01f;
-        bool cheñkCollision = _playerInAlarm;
 
-        if (_playerInAlarm == true)
-        {
-            _alarm.Play();
-        }
-
-        while (Mathf.Abs(_alarm.volume - target) > faultVolume)
+        while (_loopCycleCoroutineChangeVolume == true)
         {
             _alarm.volume = Mathf.MoveTowards(_alarm.volume, target, _fadeSpeed * Time.deltaTime);
-
-            if (cheñkCollision != _playerInAlarm)
-                yield break;
 
             yield return null;
         }
@@ -62,5 +65,29 @@ public class Alarm : MonoBehaviour
         {
             _alarm.Stop();
         }
+    }
+
+    private void SwitchAudio(Selector selector)
+    {
+        if (selector == Selector.On)
+        {
+            _audioSource.Play();
+            _audioSource.loop = true;
+
+            _loopCycleCoroutineChangeVolume = true;
+        }
+        else if (selector == Selector.Off)
+        {
+            _audioSource.Stop();
+            _audioSource.loop = false;
+
+            _loopCycleCoroutineChangeVolume = false;
+        }
+    }
+
+    private enum Selector
+    {
+        On,
+        Off
     }
 }
