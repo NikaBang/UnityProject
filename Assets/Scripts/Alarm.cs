@@ -1,6 +1,8 @@
 using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
+
 public class Alarm : MonoBehaviour
 {
     [SerializeField] private TrigerPlayer _trigerPlayer;
@@ -24,7 +26,7 @@ public class Alarm : MonoBehaviour
 
     private void OnDisable()
     {
-        _trigerPlayer.PlayerCollided += Play;
+        _trigerPlayer.PlayerCollided -= Play;
     }
 
     private void Play(bool inCollision)
