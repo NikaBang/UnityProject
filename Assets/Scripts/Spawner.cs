@@ -1,11 +1,9 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public class Spawner : ObjectPool
 {
-    [SerializeField] private GameObject _enemyPrefab;
+    [SerializeField] private Enemy _enemyPrefab;
     [SerializeField] private Transform[] _spawnPoints;
     [SerializeField] private float _delay;
 
@@ -13,15 +11,14 @@ public class Spawner : ObjectPool
 
     private void Start()
     {
-        if (_enemyPrefab.TryGetComponent(out Enemy enemy))
-            Initialize(_enemyPrefab);
+        Initialize(_enemyPrefab);
 
         StartCoroutine(SpawnEnemy());
     }
 
-    private void SetEnemy(GameObject enemy, Vector3 spawnPoint)
+    private void SetEnemy(Enemy enemy, Vector3 spawnPoint)
     {
-        enemy.SetActive(true);
+        enemy.gameObject.SetActive(true);
         enemy.transform.position = spawnPoint;
     }
 
@@ -29,7 +26,7 @@ public class Spawner : ObjectPool
     {
         while (true)
         {
-            if (TryGetObject(out GameObject enemy))
+            if (TryGetObject(out Enemy enemy))
             {
                 int spawnPointRandom = Random.Range(0, _spawnPoints.Length);
 
