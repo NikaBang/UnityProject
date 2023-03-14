@@ -7,11 +7,12 @@ public class Enemy : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Destroy();
+        Die();
     }
 
-    private void Destroy()
+    private void Die()
     {
-        gameObject.SetActive(false);
+        Destroy(gameObject);
+        //gameObject.SetActive(false);
     }
 }

@@ -1,36 +1,27 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class Spawner : ObjectPool
+public class Spawner : MonoBehaviour
 {
     [SerializeField] private Enemy _enemyPrefab;
     [SerializeField] private Transform[] _spawnPoints;
     [SerializeField] private float _delay;
 
-    private float _elapsedTime = 0;
-
     private void Start()
     {
-        Initialize(_enemyPrefab);
-
         StartCoroutine(SpawnEnemy());
     }
 
-    private void SetEnemy(Enemy enemy, Vector3 spawnPoint)
-    {
-        enemy.gameObject.SetActive(true);
-        enemy.transform.position = spawnPoint;
-    }
-
-    IEnumerator SpawnEnemy()
+    private IEnumerator SpawnEnemy()
     {
         while (true)
         {
-            if (TryGetObject(out Enemy enemy))
+            if (true)
             {
                 int spawnPointRandom = Random.Range(0, _spawnPoints.Length);
 
-                SetEnemy(enemy, _spawnPoints[spawnPointRandom].position);
+                Instantiate(_enemyPrefab, _spawnPoints[spawnPointRandom]);
             }
 
             yield return new WaitForSeconds(_delay);
