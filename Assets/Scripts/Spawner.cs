@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class Spawner : MonoBehaviour
@@ -8,8 +9,12 @@ public class Spawner : MonoBehaviour
     [SerializeField] private Transform[] _spawnPoints;
     [SerializeField] private float _delay;
 
+    private WaitForSeconds _waitForSeconds;
+
     private void Start()
     {
+        _waitForSeconds = new WaitForSeconds(_delay);
+
         StartCoroutine(SpawnEnemy());
     }
 
@@ -24,7 +29,7 @@ public class Spawner : MonoBehaviour
                 Instantiate(_enemyPrefab, _spawnPoints[spawnPointRandom]);
             }
 
-            yield return new WaitForSeconds(_delay);
+            yield return _waitForSeconds;
         }
     }
 }
