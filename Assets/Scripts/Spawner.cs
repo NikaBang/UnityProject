@@ -6,9 +6,11 @@ public class Spawner : MonoBehaviour
     [SerializeField] private GameObject _objectPrefab;
     [SerializeField] private float _TimeSpawn;
 
+    private Coroutine _current;
+
     private void Start()
     {
-        StartCoroutine(SpawnEnemy());
+        StartState(SpawnEnemy());
     }
 
     private IEnumerator SpawnEnemy()
@@ -24,5 +26,13 @@ public class Spawner : MonoBehaviour
 
             yield return new WaitForSeconds(_TimeSpawn);
         }
+    }
+
+    private void StartState(IEnumerator coroutine)
+    {
+        if (_current != null)
+            StopCoroutine(_current);
+
+        _current = StartCoroutine(coroutine);
     }
 }
