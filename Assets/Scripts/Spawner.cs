@@ -1,20 +1,13 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    [SerializeField] private Enemy _enemyPrefab;
-    [SerializeField] private Transform[] _spawnPoints;
-    [SerializeField] private float _delay;
-
-    private WaitForSeconds _waitForSeconds;
+    [SerializeField] private GameObject _objectPrefab;
+    [SerializeField] private float _TimeSpawn;
 
     private void Start()
     {
-        _waitForSeconds = new WaitForSeconds(_delay);
-
         StartCoroutine(SpawnEnemy());
     }
 
@@ -22,14 +15,14 @@ public class Spawner : MonoBehaviour
     {
         while (true)
         {
-            if (true)
-            {
-                int spawnPointRandom = Random.Range(0, _spawnPoints.Length);
+            GameObject prefab = Instantiate(_objectPrefab, transform.position, Quaternion.identity);
 
-                Instantiate(_enemyPrefab, _spawnPoints[spawnPointRandom]);
+            while (prefab != null)
+            {
+                yield return null;
             }
 
-            yield return _waitForSeconds;
+            yield return new WaitForSeconds(_TimeSpawn);
         }
     }
 }
