@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(SpriteRenderer))]
+
 public class Player : MonoBehaviour
 {
     [SerializeField] private float _speed;
@@ -45,13 +49,9 @@ public class Player : MonoBehaviour
     private void UpdateSpriteDirection()
     {
         if (_direction.x > 0)
-        {
             _sprite.flipX = false;
-        }
         else if (_direction.x < 0)
-        {
             _sprite.flipX = true;
-        }
     }
 
     private bool IsGrounded()

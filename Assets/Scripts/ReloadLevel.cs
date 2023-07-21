@@ -7,14 +7,14 @@ public class ReloadLevel : MonoBehaviour
 
     private void OnEnable()
     {
-        _trigerPlayer.PlayerCollided += Reload;
+        _trigerPlayer.PlayerCollided += OnReload;
     }
 
     private void OnDisable()
     {
-        _trigerPlayer.PlayerCollided -= Reload;
+        _trigerPlayer.PlayerCollided -= OnReload;
     }
-    private void Reload(bool inCollision)
+    private void OnReload(bool inCollision)
     {
         if (inCollision == true)
         {

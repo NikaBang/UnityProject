@@ -4,7 +4,7 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
     [SerializeField] private GameObject _objectPrefab;
-    [SerializeField] private float _TimeSpawn;
+    [SerializeField] private float _timeSpawn;
 
     private Coroutine _current;
 
@@ -24,7 +24,7 @@ public class Spawner : MonoBehaviour
                 yield return null;
             }
 
-            yield return new WaitForSeconds(_TimeSpawn);
+            yield return new WaitForSeconds(_timeSpawn);
         }
     }
 
